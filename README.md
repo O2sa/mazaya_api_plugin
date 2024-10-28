@@ -1,0 +1,1 @@
+# mazaya_api_plugin
