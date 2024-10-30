@@ -59,7 +59,7 @@ function mazaya_registre_form()
         ],
 
     ];
-    return    mazaya_form('mazaya_register', $items, 'تسجيل');
+    return    mazaya_form('mazaya_register', $items, 'إنشاء');
 }
 
 
@@ -78,7 +78,7 @@ function mazaya_login_form()
         ],
 
     ];
-    return    mazaya_form('mazaya_login', $items, 'Login');
+    return    mazaya_form('mazaya_login', $items, 'تسجيل');
 }
 
 
@@ -177,7 +177,7 @@ function mazaya_webhook_form()
 
 function mazaya_logout_form()
 {
-    
+
     return    mazaya_form('mazaya_logout', [], 'تسجيل خروج');
 }
 
@@ -199,7 +199,7 @@ function display_cards($endpoint = 'categories', $subitem = null, $child_page = 
     $output = '';
     if ($cates) {
         ob_start(); ?>
-        <div class="mazaya_cards grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+        <div class="mazaya_cards grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <?php foreach ($cates as $val) {
                 echo card_html($val, $child_page, $with_btn, $bank_card);
             } ?>
@@ -253,7 +253,7 @@ function card_html($data, $page = 'categories', $with_btn = true, $bank_card = f
             <h5 class="text-xl font-semibold tracking-tight text-gray-900 dark:text-white"><?php echo $name; ?></h5>
             <div class="<?php echo $price ? 'flex' : ''; ?> mt-4 text-center items-center justify-between">
                 <span class="<?php echo $price ? '' : 'block w-100'; ?> text-3xl font-bold text-gray-900 dark:text-white">
-                    <?php echo $price ? esc_js($price) : ''; ?>
+                    <?php echo $price ? '$' . esc_js($price) : ''; ?>
                 </span>
                 <a href="<?php echo $page ? home_url() . '/' . $page . '/' . $data['id'] : ''; ?>" class="<?php echo $with_btn ? '' : 'hidden'; ?> text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">إستعراض</a>
                 <?php echo copy_bank_wallet($data, $bank_card) ?>

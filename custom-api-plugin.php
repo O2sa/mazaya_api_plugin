@@ -69,9 +69,18 @@ function mazaya_api_request($endpoint, $method = 'GET', $data = [])
     $response = wp_remote_request($url, $args);
     // echo json_encode($response);
 
+    if ($response['response']['code']  == '403' || $response['response']['code']  == '401') {
+        // echo $response['error'];
+
+        handle_alert($response);
+        redirect_to_home();
+        // exit;
+    }
     if (!is_wp_error($response)) {
         return json_decode(wp_remote_retrieve_body($response), true);
-    } else         return ['error' => $response->get_error_message()];
+    } else {
+        redirect_to_home();
+    }
 }
 
 
@@ -107,7 +116,7 @@ function handle_request($fields = [], $action = '', $action_name = "")
         // echo $response['error'];
 
         handle_alert($response);
-        wp_redirect(home_url());
+        redirect_to_home();
         // exit;
     } else {
         // handle_alert($response);
@@ -117,14 +126,14 @@ function handle_request($fields = [], $action = '', $action_name = "")
             if ($response['user']['enable_tow_fa_at']) {
                 display_modal('المصادقة بخطوتين', mazaya_2fa_form());
             } else {
-                wp_redirect(home_url());
+                redirect_to_home();
             }
         } else if ($action == 'register') {
             mazaya_set_auth_cookie($response['token']);
-            wp_redirect(home_url());
+            redirect_to_home();
         } else if ($action == 'verify') {
             mazaya_set_auth_cookie($response['token']);
-            wp_redirect(home_url());
+            redirect_to_home();
         } else if ($action == 'generate') {
             display_modal('تفعيل المصادقة بخطوتين', mazaya_2fa_form($response, true));
         }
@@ -154,7 +163,7 @@ function mazaya_handle_requests()
         'disable' => ['token'],
         'generate' => [],
         'verify' => ['token'],
-        'bills' => ['qty', 'product_id',],
+        'bills' => ['qty', 'product_id', 'player_name', 'player_id', 'uuid'],
     ];
 
 
@@ -171,7 +180,11 @@ function mazaya_handle_requests()
         }
     }
 }
-
+function redirect_to_home()
+{
+    wp_redirect(home_url());
+    exit;
+}
 
 
 // Register shortcode for login and 2FA management
@@ -290,16 +303,16 @@ add_filter('query_vars', 'my_plugin_add_query_vars');
 function my_plugin_template_redirect()
 {
     if (get_query_var('sub_category_page')) {
-        include plugin_dir_path(__FILE__) . 'templates/subcategories-template.php';
+        include plugin_dir_path(__FILE__) . 'templates/template-subcategories.php';
         exit;
     }
 
     if (get_query_var('sub_category_id')) {
-        include plugin_dir_path(__FILE__) . 'templates/products-template.php';
+        include plugin_dir_path(__FILE__) . 'templates/template-products.php';
         exit;
     }
     if (get_query_var('product_id')) {
-        include plugin_dir_path(__FILE__) . 'templates/product-template.php';
+        include plugin_dir_path(__FILE__) . 'templates/template-product.php';
         exit;
     }
 }
