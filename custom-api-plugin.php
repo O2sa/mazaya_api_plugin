@@ -67,7 +67,7 @@ function mazaya_api_request($endpoint, $method = 'GET', $data = [])
     }
 
     $response = wp_remote_request($url, $args);
-    echo json_encode($response);
+    // echo json_encode($response);
 
     // if ($response['response']['code']  == '403' || $response['response']['code']  == '401') {
     //     // echo $response['error'];
