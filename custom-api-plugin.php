@@ -67,18 +67,19 @@ function mazaya_api_request($endpoint, $method = 'GET', $data = [])
     }
 
     $response = wp_remote_request($url, $args);
-    // echo json_encode($response);
+    echo json_encode($response);
 
-    if ($response['response']['code']  == '403' || $response['response']['code']  == '401') {
-        // echo $response['error'];
+    // if ($response['response']['code']  == '403' || $response['response']['code']  == '401') {
+    //     // echo $response['error'];
 
-        handle_alert($response);
-        redirect_to_home();
-        // exit;
-    }
+    //     handle_alert($response);
+    //     redirect_to_home();
+    //     // exit;
+    // }
     if (!is_wp_error($response)) {
         return json_decode(wp_remote_retrieve_body($response), true);
     } else {
+        handle_alert($response);
         redirect_to_home();
     }
 }
@@ -113,10 +114,9 @@ function handle_request($fields = [], $action = '', $action_name = "")
 
 
     if ($response['status'] == 'error' || $response['code'] == '403' || $response['code'] == '401') {
-        // echo $response['error'];
 
         handle_alert($response);
-        redirect_to_home();
+        // redirect_to_home();
         // exit;
     } else {
         // handle_alert($response);
